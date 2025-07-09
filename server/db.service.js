@@ -9,7 +9,7 @@ async function userFind(email) {
     return response;
 }
 async function userCreate(data) {
-    const res = await User.create(data);
+    const res = await User(data).save();
     return res;
 }
 
