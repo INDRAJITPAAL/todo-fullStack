@@ -85,7 +85,7 @@ app.post("/auth/signin", async (req, res) => {
 
         const token = jwt.sign({ email, userName }, process.env.JWT_SECRET);
 
-    
+
 
         res.json({ status: true, msg: "Signin success", token, user: user });
     } catch (e) {
@@ -147,6 +147,14 @@ app.get("/find", auth, async (req, res) => {
     try {
         const response = await todo.find(req.userId);
         res.json({ status: true, data: response });
+    } catch (e) {
+        res.json({ status: false, error: e.message });
+    }
+});
+app.get("/user/me", auth, async (req, res) => {
+    try {
+        const response = await User.findOne(req.user._id).select("-password");
+        res.json({ status: true, userInfo: response });
     } catch (e) {
         res.json({ status: false, error: e.message });
     }

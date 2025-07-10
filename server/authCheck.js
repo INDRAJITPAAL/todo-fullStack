@@ -2,25 +2,25 @@ const jwt = require("jsonwebtoken");
 const { User } = require("./db.mdels");
 
 async function auth(req, res, next) {
-    try {
-        const token = req.headers.token;
-        if (!token) {
-            res.json({
-                msg: "token must be provide"
-            })
-            return;
+        const authHead = req.headers.aauthorization;
+
+        console.log(authHead);
+        if (!authHead || !authHead.startsWith("Bearer ")) {
+            return res.json({
+                status: false,
+                msg: "authorization token not found"
+            });
         }
-        const veryfyToken = jwt.verify(token, process.env.JWT_SECRET);
-        const response = await User.findOne({ userName: veryfyToken.userName });
-        req.userId = response._id;
-    } catch (e) {
-        console.error(e.message);
-        res.json({
-            error: e.message
-        })
-        return;
-    }
-    next();
+
+        const token = authHead.split(" ")[1];
+        try {
+            const decoded =  jwt.verify(token, process.env.JWT_SECRET);
+            req.user = decoded;
+            next();
+        } catch (err) {
+            return res.status(403).json({ msg: "Invalid token" });
+        }
+    
 
 
 

@@ -17,7 +17,7 @@ const Todo = ({ user }) => {
 
   return (
     <div className="bg-white p-6 rounded shadow-md max-w-xl mx-auto mt-10">
-      <h2 className="text-2xl font-bold mb-4">Welcome {user.email}</h2>
+      <h2 className="text-2xl font-bold mb-4">Welcome {user.userName} <button className='  cursor-pointer bg-amber-700 text-sm px-3 py-2 rounded-lg ' onClick={() => { localStorage.clear(); window.location.href = "/" }} > Logout </button> </h2>
       <div className="flex gap-2 mb-4">
         <input
           type="text"
@@ -26,7 +26,7 @@ const Todo = ({ user }) => {
           onChange={(e) => setTask(e.target.value)}
           placeholder="Enter a task"
         />
-        <button onClick={addTask} className="bg-blue-600 text-white px-4 py-2 rounded">
+        <button onClick={addTask} className=" cursor-pointer bg-blue-600 text-white px-4 py-2 rounded">
           Add
         </button>
       </div>
@@ -36,7 +36,7 @@ const Todo = ({ user }) => {
             <span>{t.text}</span>
             <button
               onClick={() => deleteTask(t.id)}
-              className="text-red-500 hover:underline"
+              className=" cursor-pointer text-red-500 hover:underline"
             >
               Delete
             </button>

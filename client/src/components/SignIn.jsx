@@ -3,27 +3,18 @@ import axios from "axios";
 import toast from "react-hot-toast";
 
 
-const SignIn = ({ onSignIn }) => {
+const SignIn = () => {
   const [form, setForm] = useState({ email: '', password: '', userName: '' });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    const response = await axios.post("http://localhost:8080/auth/signin", form, {
-      withCredential: true,
-    })
+    const response = await axios.post("http://localhost:8080/auth/signin", form);
     localStorage.setItem("token", response.data.token);
-    const token = localStorage.getItem("token");
-    if (token) {
-      localStorage.setItem("user", response.data.user);
-    }
-    const userPayload = localStorage.getItem("user");
-    onSignIn(userPayload || null);
-
     if (!response.data.status) {
       toast.error(response.data.error || response.data.msg);
     } else {
       toast.success(response.data.msg);
+      window.location.href = "/"
     }
     setForm({ email: '', password: '', userName: '' });
   };
@@ -55,7 +46,7 @@ const SignIn = ({ onSignIn }) => {
         onChange={(e) => setForm({ ...form, password: e.target.value })}
         required
       />
-      <button className="bg-green-500 text-white px-4 py-2 rounded">Login</button>
+      <button className="cursor-pointer bg-green-500 text-white px-4 py-2 rounded">Login</button>
     </form>
   );
 };

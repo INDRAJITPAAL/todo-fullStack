@@ -1,10 +1,31 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import SignUp from './components/SignUp';
 import SignIn from './components/SignIn';
 import Todo from './components/Todo';
+import axios from 'axios';
 
 const App = () => {
   const [user, setUser] = useState(null); // fake auth state
+  let token = localStorage.getItem("token");
+
+  async function userInformation() {
+    const userPayload = await axios.get("http://localhost:8080/user/me", {
+      headers: {
+        aAuthorization: `Bearer ${token}`,
+      }
+    })
+    return userPayload.data.userInfo || null;
+  }
+
+  useEffect(() => {
+    const fetch = async () => {
+      setUser(await userInformation());
+
+    }
+
+    fetch();
+  }, [])
+
   console.log(user);
 
   return (
