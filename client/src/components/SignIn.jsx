@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import axios from "axios";
+import toast from "react-hot-toast";
+
 
 const SignIn = ({ onSignIn }) => {
   const [form, setForm] = useState({ email: '', password: '', userName: '' });
@@ -11,6 +13,19 @@ const SignIn = ({ onSignIn }) => {
       withCredential: true,
     })
     localStorage.setItem("token", response.data.token);
+    const token = localStorage.getItem("token");
+    if (token) {
+      localStorage.setItem("user", response.data.user);
+    }
+    const userPayload = localStorage.getItem("user");
+    onSignIn(userPayload || null);
+
+    if (!response.data.status) {
+      toast.error(response.data.error || response.data.msg);
+    } else {
+      toast.success(response.data.msg);
+    }
+    setForm({ email: '', password: '', userName: '' });
   };
 
   return (

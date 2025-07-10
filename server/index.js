@@ -84,7 +84,10 @@ app.post("/auth/signin", async (req, res) => {
         }
 
         const token = jwt.sign({ email, userName }, process.env.JWT_SECRET);
-        res.json({ status: true, msg: "Signin success", token });
+
+    
+
+        res.json({ status: true, msg: "Signin success", token, user: user });
     } catch (e) {
         res.json({ status: false, error: e.message });
     }

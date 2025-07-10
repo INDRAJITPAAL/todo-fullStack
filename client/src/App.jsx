@@ -4,7 +4,8 @@ import SignIn from './components/SignIn';
 import Todo from './components/Todo';
 
 const App = () => {
-  const [user, setUser] = useState(true); // fake auth state
+  const [user, setUser] = useState(null); // fake auth state
+  console.log(user);
 
   return (
     <div className="min-h-screen flex justify-center items-center bg-gray-500 p-6">

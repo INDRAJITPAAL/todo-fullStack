@@ -7,13 +7,11 @@ const SignUp = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const response = await axios.post("http://localhost:8080/auth/signup", form);
-    if (!response.response.data.status) {
-      toast.error(response.data.error);
+    if (!response.data.status) {
+      toast.error(response.data.error || response.data.msg);
     } else {
       toast.success(response.data.msg);
     }
-
-
     setForm({
       email: '',
       password: '',
