@@ -79,6 +79,7 @@ app.post("/auth/signin", async (req, res) => {
     const { email, userName, password } = parsed.data;
     try {
         const user = await todo.userFind(email);
+        console.log(user);
         if (!user || !bcrypt.compareSync(password, user.password)) {
             return res.json({ status: false, msg: "Email or password is incorrect" });
         }
@@ -106,19 +107,6 @@ app.post("/addTodo", auth, async (req, res) => {
     }
 });
 
-app.put("/update", auth, async (req, res) => {
-    const parsed = updateSchema.safeParse(req.body);
-    if (!parsed.success) return res.json({ status: false, msg: "Invalid format", error: parsed.error });
-
-    const { task, markAsDone, taskId } = parsed.data;
-    try {
-        const response = await todo.updateOne(taskId, { task, markAsDone });
-        res.json({ status: true, msg: "Task updated successfully", data: response });
-    } catch (e) {
-        res.json({ status: false, error: e.message });
-    }
-});
-
 app.delete("/delete", auth, async (req, res) => {
     const parsed = taskIdSchema.safeParse(req.body);
     if (!parsed.success) return res.json({ status: false, error: parsed.error });
@@ -131,21 +119,11 @@ app.delete("/delete", auth, async (req, res) => {
     }
 });
 
-app.get("/findbyId", auth, async (req, res) => {
-    const parsed = userIdSchema.safeParse(req.query);
-    if (!parsed.success) return res.json({ status: false, error: parsed.error });
 
-    try {
-        const response = await todo.findOne(parsed.data.userId);
-        res.json({ status: true, data: response });
-    } catch (e) {
-        res.json({ status: false, error: e.message });
-    }
-});
 
 app.get("/find", auth, async (req, res) => {
     try {
-        const response = await todo.find(req.userId);
+        const response = await todo.find();
         res.json({ status: true, data: response });
     } catch (e) {
         res.json({ status: false, error: e.message });
@@ -159,6 +137,23 @@ app.get("/user/me", auth, async (req, res) => {
         res.json({ status: false, error: e.message });
     }
 });
+
+// Example backend controller for markAsDone
+app.put("/mark", auth, async (req, res) => {
+  const { taskId, markAsDone } = req.body;
+  try {
+    const updated = await Todo.findByIdAndUpdate(
+      taskId,
+      { markAsDone },
+      { new: true }
+    );
+    res.status(200).json({ data: updated });
+  } catch (err) {
+    res.status(500).json({ error: "Failed to update task" });
+  }
+});
+
+
 
 // Start server
 app.listen(8080, () => console.log("Server running on port 8080"));

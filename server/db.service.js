@@ -5,7 +5,7 @@ const { User, Todo } = require("./db.mdels");
 
 
 async function userFind(email) {
-    const response = await User.findOne({ email: email });
+    const response = await User.findOne({ email: email })
     return response;
 }
 async function userCreate(data) {
@@ -14,8 +14,8 @@ async function userCreate(data) {
 }
 
 
-async function find(userId) {
-    const response = await Todo.find({ userId: userId });
+async function find() {
+    const response = await Todo.find();
     return response;
 }
 

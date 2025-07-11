@@ -5,28 +5,30 @@ import Todo from './components/Todo';
 import axios from 'axios';
 
 const App = () => {
-  const [user, setUser] = useState(null); // fake auth state
+  const [user, setUser] = useState(null);
   let token = localStorage.getItem("token");
 
   async function userInformation() {
     const userPayload = await axios.get("http://localhost:8080/user/me", {
       headers: {
-        aAuthorization: `Bearer ${token}`,
+        Authorization: `Bearer ${token}`,
       }
     })
     return userPayload.data.userInfo || null;
   }
 
   useEffect(() => {
-    const fetch = async () => {
-      setUser(await userInformation());
+    if (token) {
 
+
+      const fetch = async () => {
+        setUser(await userInformation());
+      }
+
+      fetch();
     }
-
-    fetch();
   }, [])
 
-  console.log(user);
 
   return (
     <div className="min-h-screen flex justify-center items-center bg-gray-500 p-6">
